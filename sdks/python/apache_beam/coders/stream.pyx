@@ -54,9 +54,9 @@ cdef class OutputStream(object):
     self.data[self.pos] = val
     self.pos += 1
 
-  cpdef write_var_int64(self, libc.stdint.int64_t signed_v):
+  cpdef write_var_int64(self, apache_beam.utils.stdint.int64_t signed_v):
     """Encode a long using variable-length encoding to a stream."""
-    cdef libc.stdint.uint64_t v = signed_v
+    cdef apache_beam.utils.stdint.uint64_t v = signed_v
     cdef long bits
     while True:
       bits = v & 0x7F
@@ -67,10 +67,10 @@ cdef class OutputStream(object):
       if not v:
         break
 
-  cpdef write_bigendian_int64(self, libc.stdint.int64_t signed_v):
+  cpdef write_bigendian_int64(self, apache_beam.utils.stdint.int64_t signed_v):
     self.write_bigendian_uint64(signed_v)
 
-  cpdef write_bigendian_uint64(self, libc.stdint.uint64_t v):
+  cpdef write_bigendian_uint64(self, apache_beam.utils.stdint.uint64_t v):
     if  self.buffer_size < self.pos + 8:
       self.extend(8)
     self.data[self.pos    ] = <unsigned char>(v >> 56)
@@ -83,8 +83,8 @@ cdef class OutputStream(object):
     self.data[self.pos + 7] = <unsigned char>(v      )
     self.pos += 8
 
-  cpdef write_bigendian_int32(self, libc.stdint.int32_t signed_v):
-    cdef libc.stdint.uint32_t v = signed_v
+  cpdef write_bigendian_int32(self, apache_beam.utils.stdint.int32_t signed_v):
+    cdef apache_beam.utils.stdint.uint32_t v = signed_v
     if  self.buffer_size < self.pos + 4:
       self.extend(4)
     self.data[self.pos    ] = <unsigned char>(v >> 24)
@@ -94,7 +94,7 @@ cdef class OutputStream(object):
     self.pos += 4
 
   cpdef write_bigendian_double(self, double d):
-    self.write_bigendian_int64((<libc.stdint.int64_t*><char*>&d)[0])
+    self.write_bigendian_int64((<apache_beam.utils.stdint.int64_t*><char*>&d)[0])
 
   cpdef bytes get(self):
     return self.data[:self.pos]
@@ -131,13 +131,13 @@ cdef class ByteCountingOutputStream(OutputStream):
   cpdef write_byte(self, unsigned char _):
     self.count += 1
 
-  cpdef write_bigendian_int64(self, libc.stdint.int64_t _):
+  cpdef write_bigendian_int64(self, apache_beam.utils.stdint.int64_t _):
     self.count += 8
 
-  cpdef write_bigendian_uint64(self, libc.stdint.uint64_t _):
+  cpdef write_bigendian_uint64(self, apache_beam.utils.stdint.uint64_t _):
     self.count += 8
 
-  cpdef write_bigendian_int32(self, libc.stdint.int32_t _):
+  cpdef write_bigendian_int32(self, apache_beam.utils.stdint.int32_t _):
     self.count += 4
 
   cpdef size_t get_count(self):
@@ -173,12 +173,12 @@ cdef class InputStream(object):
   cpdef bytes read_all(self, bint nested=False):
     return self.read(self.read_var_int64() if nested else self.size())
 
-  cpdef libc.stdint.int64_t read_var_int64(self) except? -1:
+  cpdef apache_beam.utils.stdint.int64_t read_var_int64(self) except? -1:
     """Decode a variable-length encoded long from a stream."""
     cdef long byte
     cdef long bits
     cdef long shift = 0
-    cdef libc.stdint.int64_t result = 0
+    cdef apache_beam.utils.stdint.int64_t result = 0
     while True:
       byte = self.read_byte()
       if byte < 0:
@@ -194,35 +194,35 @@ cdef class InputStream(object):
         break
     return result
 
-  cpdef libc.stdint.int64_t read_bigendian_int64(self) except? -1:
+  cpdef apache_beam.utils.stdint.int64_t read_bigendian_int64(self) except? -1:
     return self.read_bigendian_uint64()
 
-  cpdef libc.stdint.uint64_t read_bigendian_uint64(self) except? -1:
+  cpdef apache_beam.utils.stdint.uint64_t read_bigendian_uint64(self) except? -1:
     self.pos += 8
     return (<unsigned char>self.allc[self.pos - 1]
-      | <libc.stdint.uint64_t><unsigned char>self.allc[self.pos - 2] <<  8
-      | <libc.stdint.uint64_t><unsigned char>self.allc[self.pos - 3] << 16
-      | <libc.stdint.uint64_t><unsigned char>self.allc[self.pos - 4] << 24
-      | <libc.stdint.uint64_t><unsigned char>self.allc[self.pos - 5] << 32
-      | <libc.stdint.uint64_t><unsigned char>self.allc[self.pos - 6] << 40
-      | <libc.stdint.uint64_t><unsigned char>self.allc[self.pos - 7] << 48
-      | <libc.stdint.uint64_t><unsigned char>self.allc[self.pos - 8] << 56)
+      | <apache_beam.utils.stdint.uint64_t><unsigned char>self.allc[self.pos - 2] <<  8
+      | <apache_beam.utils.stdint.uint64_t><unsigned char>self.allc[self.pos - 3] << 16
+      | <apache_beam.utils.stdint.uint64_t><unsigned char>self.allc[self.pos - 4] << 24
+      | <apache_beam.utils.stdint.uint64_t><unsigned char>self.allc[self.pos - 5] << 32
+      | <apache_beam.utils.stdint.uint64_t><unsigned char>self.allc[self.pos - 6] << 40
+      | <apache_beam.utils.stdint.uint64_t><unsigned char>self.allc[self.pos - 7] << 48
+      | <apache_beam.utils.stdint.uint64_t><unsigned char>self.allc[self.pos - 8] << 56)
 
-  cpdef libc.stdint.int32_t read_bigendian_int32(self) except? -1:
+  cpdef apache_beam.utils.stdint.int32_t read_bigendian_int32(self) except? -1:
     self.pos += 4
     return (<unsigned char>self.allc[self.pos - 1]
-      | <libc.stdint.uint32_t><unsigned char>self.allc[self.pos - 2] <<  8
-      | <libc.stdint.uint32_t><unsigned char>self.allc[self.pos - 3] << 16
-      | <libc.stdint.uint32_t><unsigned char>self.allc[self.pos - 4] << 24)
+      | <apache_beam.utils.stdint.uint32_t><unsigned char>self.allc[self.pos - 2] <<  8
+      | <apache_beam.utils.stdint.uint32_t><unsigned char>self.allc[self.pos - 3] << 16
+      | <apache_beam.utils.stdint.uint32_t><unsigned char>self.allc[self.pos - 4] << 24)
 
   cpdef double read_bigendian_double(self) except? -1:
-    cdef libc.stdint.int64_t as_long = self.read_bigendian_int64()
+    cdef apache_beam.utils.stdint.int64_t as_long = self.read_bigendian_int64()
     return (<double*><char*>&as_long)[0]
 
-cpdef libc.stdint.int64_t get_varint_size(libc.stdint.int64_t value):
+cpdef apache_beam.utils.stdint.int64_t get_varint_size(apache_beam.utils.stdint.int64_t value):
   """Returns the size of the given integer value when encode as a VarInt."""
-  cdef libc.stdint.int64_t varint_size = 0
-  cdef libc.stdint.uint64_t bits = value
+  cdef apache_beam.utils.stdint.int64_t varint_size = 0
+  cdef apache_beam.utils.stdint.uint64_t bits = value
   while True:
     varint_size += 1
     bits >>= 7

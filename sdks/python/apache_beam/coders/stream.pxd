@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-cimport libc.stdint
+cimport apache_beam.utils.stdint
 
 
 cdef class OutputStream(object):
@@ -25,10 +25,10 @@ cdef class OutputStream(object):
 
   cpdef write(self, bytes b, bint nested=*)
   cpdef write_byte(self, unsigned char val)
-  cpdef write_var_int64(self, libc.stdint.int64_t v)
-  cpdef write_bigendian_int64(self, libc.stdint.int64_t signed_v)
-  cpdef write_bigendian_uint64(self, libc.stdint.uint64_t signed_v)
-  cpdef write_bigendian_int32(self, libc.stdint.int32_t signed_v)
+  cpdef write_var_int64(self, apache_beam.utils.stdint.int64_t v)
+  cpdef write_bigendian_int64(self, apache_beam.utils.stdint.int64_t signed_v)
+  cpdef write_bigendian_uint64(self, apache_beam.utils.stdint.uint64_t signed_v)
+  cpdef write_bigendian_int32(self, apache_beam.utils.stdint.int32_t signed_v)
   cpdef write_bigendian_double(self, double d)
 
   cpdef bytes get(self)
@@ -41,9 +41,9 @@ cdef class ByteCountingOutputStream(OutputStream):
 
   cpdef write(self, bytes b, bint nested=*)
   cpdef write_byte(self, unsigned char val)
-  cpdef write_bigendian_int64(self, libc.stdint.int64_t val)
-  cpdef write_bigendian_uint64(self, libc.stdint.uint64_t val)
-  cpdef write_bigendian_int32(self, libc.stdint.int32_t val)
+  cpdef write_bigendian_int64(self, apache_beam.utils.stdint.int64_t val)
+  cpdef write_bigendian_uint64(self, apache_beam.utils.stdint.uint64_t val)
+  cpdef write_bigendian_int32(self, apache_beam.utils.stdint.int32_t val)
   cpdef size_t get_count(self)
   cpdef bytes get(self)
 
@@ -56,11 +56,11 @@ cdef class InputStream(object):
   cpdef ssize_t size(self) except? -1
   cpdef bytes read(self, size_t len)
   cpdef long read_byte(self) except? -1
-  cpdef libc.stdint.int64_t read_var_int64(self) except? -1
-  cpdef libc.stdint.int64_t read_bigendian_int64(self) except? -1
-  cpdef libc.stdint.uint64_t read_bigendian_uint64(self) except? -1
-  cpdef libc.stdint.int32_t read_bigendian_int32(self) except? -1
+  cpdef apache_beam.utils.stdint.int64_t read_var_int64(self) except? -1
+  cpdef apache_beam.utils.stdint.int64_t read_bigendian_int64(self) except? -1
+  cpdef apache_beam.utils.stdint.uint64_t read_bigendian_uint64(self) except? -1
+  cpdef apache_beam.utils.stdint.int32_t read_bigendian_int32(self) except? -1
   cpdef double read_bigendian_double(self) except? -1
   cpdef bytes read_all(self, bint nested=*)
 
-cpdef libc.stdint.int64_t get_varint_size(libc.stdint.int64_t value)
+cpdef apache_beam.utils.stdint.int64_t get_varint_size(apache_beam.utils.stdint.int64_t value)

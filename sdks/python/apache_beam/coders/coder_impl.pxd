@@ -21,7 +21,7 @@ cimport cython
 
 cimport cpython.ref
 cimport cpython.tuple
-cimport libc.stdint
+cimport apache_beam.utils.stdint
 cimport libc.stdlib
 cimport libc.string
 
@@ -42,7 +42,7 @@ cdef class CoderImpl(object):
   cpdef bytes encode_nested(self, value)
   cpdef decode_nested(self, bytes encoded)
   cpdef estimate_size(self, value, bint nested=?)
-  @cython.locals(varint_size=int, bits=libc.stdint.uint64_t)
+  @cython.locals(varint_size=int, bits=apache_beam.utils.stdint.uint64_t)
   @cython.overflowcheck(False)
   cpdef int _get_nested_size(self, int inner_size, bint nested)
   cpdef get_estimated_size_and_observables(self, value, bint nested=?)
@@ -92,7 +92,7 @@ cdef class TimestampCoderImpl(StreamCoderImpl):
 
 cdef list small_ints
 cdef class VarIntCoderImpl(StreamCoderImpl):
-  @cython.locals(ivalue=libc.stdint.int64_t)
+  @cython.locals(ivalue=apache_beam.utils.stdint.int64_t)
   cpdef bytes encode(self, value)
 
 

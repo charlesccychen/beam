@@ -16,7 +16,7 @@
 #
 
 cimport cython
-from libc.stdint cimport int64_t
+from apache_beam.utils.stdint cimport int64_t
 
 
 cdef type Timestamp

@@ -16,7 +16,7 @@
 #
 
 cimport cython
-from libc.stdint cimport int64_t, INT64_MIN, INT64_MAX
+from apache_beam.utils.stdint cimport int64_t, INT64_MIN, INT64_MAX
 
 cdef double _NEG_INF, _POS_INF, _NAN
 

@@ -84,15 +84,11 @@ except DistributionNotFound:
   pass
 
 # Currently all compiled modules are optional  (for performance only).
-if platform.system() == 'Windows':
-  # Windows doesn't always provide int64_t.
+try:
+  # pylint: disable=wrong-import-position
   from Cython.Build import cythonize
-else:
-  try:
-    # pylint: disable=wrong-import-position
-    from Cython.Build import cythonize
-  except ImportError:
-    cythonize = lambda *args, **kwargs: []
+except ImportError:
+  cythonize = lambda *args, **kwargs: []
 
 
 REQUIRED_PACKAGES = [
@@ -188,7 +184,7 @@ setuptools.setup(
     author_email=PACKAGE_EMAIL,
     packages=setuptools.find_packages(),
     package_data={'apache_beam': [
-        '*/*.pyx', '*/*/*.pyx', '*/*.pxd', '*/*/*.pxd', 'testing/data/*.yaml']},
+        '*/*.pyx', '*/*/*.pyx', '*/*.pxd', '*/*/*.pxd', '*/*/*.h', 'testing/data/*.yaml']},
     ext_modules=cythonize([
         'apache_beam/**/*.pyx',
         'apache_beam/coders/coder_impl.py',
@@ -200,7 +196,8 @@ setuptools.setup(
         'apache_beam/transforms/cy_combiners.py',
         'apache_beam/utils/counters.py',
         'apache_beam/utils/windowed_value.py',
-    ]),
+        'apache_beam/utils/stdint.pxd',
+    ], include_path=['apache_beam/utils']),
     setup_requires=REQUIRED_SETUP_PACKAGES,
     install_requires=REQUIRED_PACKAGES,
     python_requires='>=2.7,<3.0',

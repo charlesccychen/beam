@@ -16,14 +16,14 @@
 #
 
 cimport cython
-cimport libc.stdint
+cimport apache_beam.utils.stdint
 
 from apache_beam.utils.counters cimport Counter
 
 
 cdef class TransformIOCounter(object):
   cpdef update_current_step(self)
-  cpdef add_bytes_read(self, libc.stdint.int64_t n)
+  cpdef add_bytes_read(self, apache_beam.utils.stdint.int64_t n)
   cpdef __enter__(self)
   cpdef __exit__(self, exc_type, exc_value, traceback)
 
@@ -39,9 +39,9 @@ cdef class SideInputReadCounter(TransformIOCounter):
 
 
 cdef class SumAccumulator(object):
-  cdef libc.stdint.int64_t _value
-  cpdef update(self, libc.stdint.int64_t value)
-  cpdef libc.stdint.int64_t value(self)
+  cdef apache_beam.utils.stdint.int64_t _value
+  cpdef update(self, apache_beam.utils.stdint.int64_t value)
+  cpdef apache_beam.utils.stdint.int64_t value(self)
 
 
 cdef class OperationCounters(object):
@@ -50,13 +50,13 @@ cdef class OperationCounters(object):
   cdef public Counter mean_byte_counter
   cdef public coder_impl
   cdef public SumAccumulator active_accumulator
-  cdef public libc.stdint.int64_t _sample_counter
-  cdef public libc.stdint.int64_t _next_sample
+  cdef public apache_beam.utils.stdint.int64_t _sample_counter
+  cdef public apache_beam.utils.stdint.int64_t _next_sample
 
   cpdef update_from(self, windowed_value)
   cdef inline do_sample(self, windowed_value)
   cpdef update_collect(self)
 
-  cdef libc.stdint.int64_t _compute_next_sample(self, libc.stdint.int64_t i)
+  cdef apache_beam.utils.stdint.int64_t _compute_next_sample(self, apache_beam.utils.stdint.int64_t i)
   cdef inline bint _should_sample(self)
   cpdef bint should_sample(self)
