@@ -86,7 +86,7 @@ except DistributionNotFound:
 # Currently all compiled modules are optional  (for performance only).
 if platform.system() == 'Windows':
   # Windows doesn't always provide int64_t.
-  cythonize = lambda *args, **kwargs: []
+  from Cython.Build import cythonize
 else:
   try:
     # pylint: disable=wrong-import-position
