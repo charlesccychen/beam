@@ -73,9 +73,9 @@ buildscript {
     // classpath "com.github.ben-manes:gradle-versions-plugin:0.17.0"                                      // Enable dependency checks
 
     // Plugins which require online access should not be enabled when running in offline mode.
-    if (!gradle.startParameter.isOffline()) {
-      classpath "com.gradle:build-scan-plugin:1.13.1"                                                   // Enable publishing build scans
-    }
+    // if (!gradle.startParameter.isOffline()) {
+    //   classpath "com.gradle:build-scan-plugin:1.13.1"                                                   // Enable publishing build scans
+    // }
   }
 }
 
@@ -84,11 +84,7 @@ buildscript {
 
 apply plugin: "base"
 
-// Plugins which require online access should not be enabled when running in offline mode.
-if (!gradle.startParameter.isOffline()) {
-  apply plugin: "com.gradle.build-scan"
-}
-
+// apply plugin: "com.gradle.build-scan"
 // apply plugin: 'com.github.ben-manes.versions'
 // JENKINS_HOME and BUILD_ID set automatically during Jenkins execution
 def isCIBuild = ['JENKINS_HOME', 'BUILD_ID'].every System.&getenv
@@ -207,6 +203,11 @@ task pythonPreCommit() {
 
 task pythonPostCommit() {
   dependsOn ":beam-sdks-python:postCommit"
+}
+
+task runBeamDependencyCheck() {
+  dependsOn ":dependencyUpdates"
+  dependsOn ":beam-sdks-python:dependencyUpdates"
 }
 
 apply plugin: 'net.researchgate.release'
