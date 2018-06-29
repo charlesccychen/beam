@@ -31,7 +31,6 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -125,7 +124,7 @@ public class SplittableParDoProcessFnTest {
           PositionT,
           TrackerT extends RestrictionTracker<RestrictionT, PositionT>>
       implements AutoCloseable {
-    private final DoFnTester<KeyedWorkItem<byte[], KV<InputT, RestrictionT>>, OutputT> tester;
+    private final DoFnTester<KeyedWorkItem<String, KV<InputT, RestrictionT>>, OutputT> tester;
     private Instant currentProcessingTime;
 
     private InMemoryTimerInternals timerInternals;
@@ -201,8 +200,7 @@ public class SplittableParDoProcessFnTest {
 
     void startElement(WindowedValue<KV<InputT, RestrictionT>> windowedValue) throws Exception {
       tester.processElement(
-          KeyedWorkItems.elementsWorkItem(
-              "key".getBytes(StandardCharsets.UTF_8), Collections.singletonList(windowedValue)));
+          KeyedWorkItems.elementsWorkItem("key", Collections.singletonList(windowedValue)));
     }
 
     /**
@@ -221,8 +219,7 @@ public class SplittableParDoProcessFnTest {
       if (timers.isEmpty()) {
         return false;
       }
-      tester.processElement(
-          KeyedWorkItems.timersWorkItem("key".getBytes(StandardCharsets.UTF_8), timers));
+      tester.processElement(KeyedWorkItems.timersWorkItem("key", timers));
       return true;
     }
 
