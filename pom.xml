@@ -91,6 +91,7 @@
   </developers>
 
   <properties>
+    <external.createDependencyReducedPom>true</external.createDependencyReducedPom>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <external.build.directory>${project.basedir}/target</external.build.directory>
     <beam.javadoc_opts>-Xdoclint:all -Xdoclint:-missing</beam.javadoc_opts>
@@ -1941,6 +1942,7 @@
                 <goal>shade</goal>
               </goals>
               <configuration>
+                <createDependencyReducedPom>${external.createDependencyReducedPom}</createDependencyReducedPom>
                 <shadeTestJar>true</shadeTestJar>
                 <artifactSet>
                   <includes>

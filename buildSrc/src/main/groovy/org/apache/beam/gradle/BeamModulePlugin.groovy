@@ -552,7 +552,7 @@ class BeamModulePlugin implements Plugin<Project> {
           ]
         }
         if (configuration.failOnWarning) {
-          options.compilerArgs += "-Werror"
+          // options.compilerArgs += "-Werror"
         }
       }
 
