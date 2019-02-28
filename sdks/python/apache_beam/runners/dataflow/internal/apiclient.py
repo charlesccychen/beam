@@ -958,11 +958,6 @@ def _verify_interpreter_version_is_supported(pipeline_options):
     return
 
   if sys.version_info[0:2] in [(3, 5), (3, 6)]:
-    if sys.version_info[0:3] < (3, 5, 3):
-      warnings.warn(
-          'You are using an early release for Python 3.5. It is recommended '
-          'to use Python 3.5.3 or higher with Dataflow '
-          'runner.')
     return
 
   debug_options = pipeline_options.view_as(DebugOptions)
